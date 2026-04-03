@@ -1,0 +1,27 @@
+<drawables xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://developer.garmin.com/downloads/connect-iq/resources.xsd">
+    <bitmap id="LauncherIcon" filename="launcher_icon.svg" dithering="none" />
+    <bitmap id="Num00" filename="numbers/num_00.png" />
+    <bitmap id="Num01" filename="numbers/num_01.png" />
+    <bitmap id="Num02" filename="numbers/num_02.png" />
+    <bitmap id="Num03" filename="numbers/num_03.png" />
+    <bitmap id="Num04" filename="numbers/num_04.png" />
+    <bitmap id="Num05" filename="numbers/num_05.png" />
+    <bitmap id="Num06" filename="numbers/num_06.png" />
+    <bitmap id="Num07" filename="numbers/num_07.png" />
+    <bitmap id="Num08" filename="numbers/num_08.png" />
+    <bitmap id="Num09" filename="numbers/num_09.png" />
+    <bitmap id="Num10" filename="numbers/num_10.png" />
+    <bitmap id="Num11" filename="numbers/num_11.png" />
+    <bitmap id="Num12" filename="numbers/num_12.png" />
+    <bitmap id="Num13" filename="numbers/num_13.png" />
+    <bitmap id="Num14" filename="numbers/num_14.png" />
+    <bitmap id="Num15" filename="numbers/num_15.png" />
+    <bitmap id="Num16" filename="numbers/num_16.png" />
+    <bitmap id="Num17" filename="numbers/num_17.png" />
+    <bitmap id="Num18" filename="numbers/num_18.png" />
+    <bitmap id="Num19" filename="numbers/num_19.png" />
+    <bitmap id="Num20" filename="numbers/num_20.png" />
+    <bitmap id="Num21" filename="numbers/num_21.png" />
+    <bitmap id="Num22" filename="numbers/num_22.png" />
+    <bitmap id="Num23" filename="numbers/num_23.png" />
+</drawables>
