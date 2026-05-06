@@ -18,53 +18,79 @@ RADIUS = SIZE // 2
 FONT_PATH = "/System/Library/Fonts/Helvetica.ttc"
 NUM_DIR = os.path.join(SCRIPT_DIR, "resources", "drawables", "numbers")
 
+# Mirror highlightColor() in TwentyFourHourView.mc
+HIGHLIGHT_COLORS = {
+    1: (255, 255, 0),      # Yellow
+    2: (255, 0, 0),        # Red
+    3: (0, 255, 0),        # Green
+    4: (0, 0, 255),        # Blue
+    5: (255, 170, 0),      # Orange (Garmin COLOR_ORANGE = 0xFFAA00)
+}
 
-def get_xy(hour_float, r):
+
+def get_xy(hour_float, r, noon_at_top=False):
     angle_deg = (hour_float * 15.0) - 90.0
+    if noon_at_top:
+        angle_deg += 180.0
     angle_rad = math.radians(angle_deg)
     x = CENTER + r * math.cos(angle_rad)
     y = CENTER + r * math.sin(angle_rad)
     return x, y
 
 
-def render_watchface(hour, minute, date_str, show_minute_hand=True, show_date=True):
-    """Render the watch face at a given time."""
+def render_watchface(
+    hour,
+    minute,
+    date_str,
+    show_minute_hand=True,
+    show_date=True,
+    noon_at_top=False,
+    five_min_color=0,
+    show_battery=False,
+    battery_pct=100,
+):
     img = Image.new("RGB", (SIZE, SIZE), (0, 0, 0))
     draw = ImageDraw.Draw(img)
 
-    # Load number bitmaps
-    num_images = []
-    for i in range(24):
-        num_images.append(Image.open(os.path.join(NUM_DIR, f"num_{i:02d}.png")).convert("RGBA"))
+    prefix = "num_noon_" if noon_at_top else "num_"
+    num_images = [
+        Image.open(os.path.join(NUM_DIR, f"{prefix}{i:02d}.png")).convert("RGBA")
+        for i in range(24)
+    ]
 
-    # Layout
     number_radius = RADIUS - 8
     tick_outer = RADIUS - 18
     hour_tick_inner = RADIUS - 32
     quarter_tick_inner = RADIUS - 25
 
-    # Number bitmaps
     for i in range(24):
         bmp = num_images[i]
-        px, py = get_xy(float(i), number_radius)
+        px, py = get_xy(float(i), number_radius, noon_at_top)
         bw, bh = bmp.size
         img.paste(bmp, (int(px - bw / 2), int(py - bh / 2)), bmp)
 
-    # Tick marks
+    highlight_on = five_min_color > 0
+    highlight_rgb = HIGHLIGHT_COLORS.get(five_min_color, (255, 255, 255))
+
     for i in range(96):
         hour_float = i / 4.0
         is_hour = (i % 4 == 0)
-        ox, oy = get_xy(hour_float, tick_outer)
+        is_five_min = (i % 8 == 0)
+        ox, oy = get_xy(hour_float, tick_outer, noon_at_top)
         if is_hour:
-            ix, iy = get_xy(hour_float, hour_tick_inner)
-            draw.line([(ox, oy), (ix, iy)], fill=(255, 255, 255), width=1)
+            ix, iy = get_xy(hour_float, hour_tick_inner, noon_at_top)
+            color = highlight_rgb if (highlight_on and is_five_min) else (255, 255, 255)
+            draw.line([(ox, oy), (ix, iy)], fill=color, width=1)
         else:
-            ix, iy = get_xy(hour_float, quarter_tick_inner)
+            ix, iy = get_xy(hour_float, quarter_tick_inner, noon_at_top)
             draw.line([(ox, oy), (ix, iy)], fill=(170, 170, 170), width=1)
 
     # Hour hand
     hour_float = hour + minute / 60.0
-    angle_rad = math.radians((hour_float * 15.0) - 90.0)
+    angle_deg = (hour_float * 15.0) - 90.0
+    if noon_at_top:
+        angle_deg += 180.0
+    angle_rad = math.radians(angle_deg)
     tip_radius = RADIUS - 26
     tail_length = 15
     arrow_head_length = 10
@@ -87,7 +113,6 @@ def render_watchface(hour, minute, date_str, show_minute_hand=True, show_date=Tr
     wry = shaft_y - arrow_half_width * math.sin(perp)
     draw.polygon([(tip_x, tip_y), (wlx, wly), (wrx, wry)], fill=(255, 255, 255))
 
-    # Minute hand
     if show_minute_hand:
         min_rad = math.radians((minute * 6.0) - 90.0)
         min_len = RADIUS - 50
@@ -96,56 +121,88 @@ def render_watchface(hour, minute, date_str, show_minute_hand=True, show_date=Tr
         mty = CENTER + min_len * math.sin(min_rad)
         mtlx = CENTER - min_tail * math.cos(min_rad)
         mtly = CENTER - min_tail * math.sin(min_rad)
-        draw.line([(mtlx, mtly), (mtx, mty)], fill=(170, 170, 170), width=2)
+        min_color = highlight_rgb if highlight_on else (170, 170, 170)
+        draw.line([(mtlx, mtly), (mtx, mty)], fill=min_color, width=2)
 
-    # Center dot
     draw.ellipse([CENTER - 3, CENTER - 3, CENTER + 3, CENTER + 3], fill=(255, 255, 255))
     draw.ellipse([CENTER - 1, CENTER - 1, CENTER + 1, CENTER + 1], fill=(0, 0, 0))
 
-    # Date
+    try:
+        text_font = ImageFont.truetype(FONT_PATH, 14, index=0)
+    except Exception:
+        text_font = ImageFont.load_default()
+
     if show_date:
-        try:
-            date_font = ImageFont.truetype(FONT_PATH, 14, index=0)
-        except Exception:
-            date_font = ImageFont.load_default()
-        bbox = draw.textbbox((0, 0), date_str, font=date_font)
+        bbox = draw.textbbox((0, 0), date_str, font=text_font)
         tw = bbox[2] - bbox[0]
         th = bbox[3] - bbox[1]
         dx = CENTER - tw // 2
         dy = CENTER + 40
         draw.rectangle([dx - 3, dy - 1, dx + tw + 3, dy + th + 1], fill=(0, 0, 0))
-        draw.text((dx, dy), date_str, font=date_font, fill=(170, 170, 170))
+        draw.text((dx, dy), date_str, font=text_font, fill=(170, 170, 170))
+
+    if show_battery:
+        batt_str = f"{battery_pct}%"
+        bbox = draw.textbbox((0, 0), batt_str, font=text_font)
+        tw = bbox[2] - bbox[0]
+        th = bbox[3] - bbox[1]
+        bx = CENTER - tw // 2
+        by = CENTER - 40 - th
+        draw.rectangle([bx - 3, by - 1, bx + tw + 3, by + th + 1], fill=(0, 0, 0))
+        if battery_pct <= 10:
+            batt_color = (255, 0, 0)
+        elif battery_pct <= 25:
+            batt_color = (255, 255, 0)
+        else:
+            batt_color = (170, 170, 170)
+        draw.text((bx, by), batt_str, font=text_font, fill=batt_color)
 
     return img
 
 
 def main():
     scenes = [
-        # (hour, minute, date, show_minute, show_date, filename, description)
-        (10, 27, "Mar 27", True, True, "screen-image-1.png", "10:27 AM with date"),
-        (16, 45, "Mar 27", True, True, "screen-image-2.png", "4:45 PM with date"),
-        (22, 10, "Mar 27", False, True, "screen-image-3.png", "10:10 PM, no minute hand"),
+        # Showcase the original look (defaults — backward compatible)
+        dict(
+            hour=10, minute=27, date_str="Mar 27",
+            show_minute_hand=True, show_date=True,
+            filename="screen-image-1.png",
+            description="10:27 AM — classic 24h dial",
+        ),
+        # Showcase v2: noon-at-top + orange highlights + battery + colored minute hand
+        dict(
+            hour=16, minute=45, date_str="Mar 27",
+            show_minute_hand=True, show_date=True,
+            noon_at_top=True, five_min_color=5,
+            show_battery=True, battery_pct=68,
+            filename="screen-image-2.png",
+            description="4:45 PM — noon at top, orange tick highlights, battery",
+        ),
+        # Night, hour-hand only, with date and low-battery indicator
+        dict(
+            hour=22, minute=10, date_str="Mar 27",
+            show_minute_hand=False, show_date=True,
+            show_battery=True, battery_pct=18,
+            filename="screen-image-3.png",
+            description="10:10 PM — minimalist, low-battery indicator",
+        ),
     ]
 
-    for hour, minute, date_str, show_min, show_date, filename, desc in scenes:
-        img = render_watchface(hour, minute, date_str, show_min, show_date)
+    for scene in scenes:
+        filename = scene.pop("filename")
+        description = scene.pop("description")
+        img = render_watchface(**scene)
 
         out = os.path.join(SCRIPT_DIR, filename)
         img.save(out, optimize=True)
         size_kb = os.path.getsize(out) / 1024
-        print(f"✅ {filename}: {desc} — {img.size[0]}x{img.size[1]}, {size_kb:.0f}KB")
+        print(f"✅ {filename}: {description} — {img.size[0]}x{img.size[1]}, {size_kb:.0f}KB")
 
         if size_kb > 150:
-            print(f"   ⚠️ Over 150KB! Trying JPEG...")
+            print(f"   ⚠️ Over 150KB! Saving as JPEG...")
             out_jpg = out.replace(".png", ".jpg")
             img.save(out_jpg, "JPEG", quality=85, optimize=True)
             print(f"   → {os.path.getsize(out_jpg)/1024:.0f}KB")
-
-    # Clean up temp files
-    for f in ["screen-260.png", "screen-520.png"]:
-        p = os.path.join(SCRIPT_DIR, f)
-        if os.path.exists(p):
-            os.remove(p)
 
     print("\nDone!")
 

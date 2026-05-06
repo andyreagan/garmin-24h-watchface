@@ -24,4 +24,28 @@
     <bitmap id="Num21" filename="numbers/num_21.png" />
     <bitmap id="Num22" filename="numbers/num_22.png" />
     <bitmap id="Num23" filename="numbers/num_23.png" />
+    <bitmap id="NumNoon00" filename="numbers/num_noon_00.png" />
+    <bitmap id="NumNoon01" filename="numbers/num_noon_01.png" />
+    <bitmap id="NumNoon02" filename="numbers/num_noon_02.png" />
+    <bitmap id="NumNoon03" filename="numbers/num_noon_03.png" />
+    <bitmap id="NumNoon04" filename="numbers/num_noon_04.png" />
+    <bitmap id="NumNoon05" filename="numbers/num_noon_05.png" />
+    <bitmap id="NumNoon06" filename="numbers/num_noon_06.png" />
+    <bitmap id="NumNoon07" filename="numbers/num_noon_07.png" />
+    <bitmap id="NumNoon08" filename="numbers/num_noon_08.png" />
+    <bitmap id="NumNoon09" filename="numbers/num_noon_09.png" />
+    <bitmap id="NumNoon10" filename="numbers/num_noon_10.png" />
+    <bitmap id="NumNoon11" filename="numbers/num_noon_11.png" />
+    <bitmap id="NumNoon12" filename="numbers/num_noon_12.png" />
+    <bitmap id="NumNoon13" filename="numbers/num_noon_13.png" />
+    <bitmap id="NumNoon14" filename="numbers/num_noon_14.png" />
+    <bitmap id="NumNoon15" filename="numbers/num_noon_15.png" />
+    <bitmap id="NumNoon16" filename="numbers/num_noon_16.png" />
+    <bitmap id="NumNoon17" filename="numbers/num_noon_17.png" />
+    <bitmap id="NumNoon18" filename="numbers/num_noon_18.png" />
+    <bitmap id="NumNoon19" filename="numbers/num_noon_19.png" />
+    <bitmap id="NumNoon20" filename="numbers/num_noon_20.png" />
+    <bitmap id="NumNoon21" filename="numbers/num_noon_21.png" />
+    <bitmap id="NumNoon22" filename="numbers/num_noon_22.png" />
+    <bitmap id="NumNoon23" filename="numbers/num_noon_23.png" />
 </drawables>

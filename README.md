@@ -8,9 +8,9 @@ Inspired by the [Spokes Worldtime](https://apps.garmin.cn/zh-CN/apps/ada4fbf3-9a
 
 ## Screenshots
 
-| Morning (10:27 AM) | Afternoon (4:45 PM) | Night (10:10 PM) |
+| Classic (10:27 AM) | Noon-at-top + orange (4:45 PM) | Minimalist + low battery (10:10 PM) |
 |:---:|:---:|:---:|
-| ![Morning](screen-image-1.png) | ![Afternoon](screen-image-2.png) | ![Night](screen-image-3.png) |
+| ![Classic](screen-image-1.png) | ![Noon-at-top](screen-image-2.png) | ![Minimalist](screen-image-3.png) |
 
 ### Simulator
 
@@ -25,11 +25,20 @@ Inspired by the [Spokes Worldtime](https://apps.garmin.cn/zh-CN/apps/ada4fbf3-9a
 ## Features
 
 - **24-hour dial**: 24 at top (midnight), 6 at right, 12 at bottom, 18 at left (clockwise)
-- **Rotated number labels**: Numbers on the top half (18→6) read from the top; numbers on the bottom half (7→17) are flipped so they read from the bottom — legible all around the dial
+- **Rotated number labels**: Numbers on the top half read normally; numbers on the bottom half are flipped so they read from below — legible all around the dial
 - **Hour and quarter-hour tick marks**
 - **Hour hand** with arrowhead for precise time reading
+- **Noon-at-top option** — flip the dial so 12 sits at the top instead of 24
+- **5-minute tick highlights** — color the every-5-minute marks (Yellow / Red / Green / Blue / Orange) for quick minute reading; the minute hand picks up the same color
+- **Battery percentage** — optional readout above the dial center, color-coded yellow ≤25% and red ≤10%
 - **Optional minute hand** (toggle in settings)
 - **Optional date display** (toggle in settings)
+
+### What's new in v2
+
+- Noon-at-top dial orientation
+- Color-highlighted 5-minute tick marks with matching minute hand
+- Battery % readout
 
 ## Supported Devices
 
@@ -116,8 +125,8 @@ python3 generate_numbers.py    # Requires: pip3 install Pillow
 │   ├── TwentyFourHourApp.mc        # App entry point
 │   └── TwentyFourHourView.mc       # Watch face drawing logic
 ├── resources/
-│   ├── drawables/numbers/           # 24 pre-rotated number bitmaps
-│   ├── settings/                    # ShowMinuteHand, ShowDate properties
+│   ├── drawables/numbers/           # 24 standard + 24 noon-at-top pre-rotated bitmaps
+│   ├── settings/                    # ShowMinuteHand, ShowDate, ShowBattery, NoonAtTop, FiveMinTickColor
 │   └── strings/                     # App name, setting titles
 ├── generate_numbers.py              # Regenerate rotated number bitmaps
 ├── generate_screen_images.py        # Generate store screen images

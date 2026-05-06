@@ -2,4 +2,13 @@
     <string id="AppName">24H Watch Face</string>
     <string id="ShowMinuteHandTitle">Show Minute Hand</string>
     <string id="ShowDateTitle">Show Date</string>
+    <string id="ShowBatteryTitle">Show Battery %</string>
+    <string id="NoonAtTopTitle">Noon at Top (12 up)</string>
+    <string id="FiveMinTickColorTitle">5-Minute Tick Highlight</string>
+    <string id="ColorOff">Off</string>
+    <string id="ColorYellow">Yellow</string>
+    <string id="ColorRed">Red</string>
+    <string id="ColorGreen">Green</string>
+    <string id="ColorBlue">Blue</string>
+    <string id="ColorOrange">Orange</string>
 </strings>

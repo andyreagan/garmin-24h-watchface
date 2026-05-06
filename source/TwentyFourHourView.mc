@@ -13,10 +13,14 @@ class TwentyFourHourView extends WatchUi.WatchFace {
     private var _centerY as Number = 0;
     private var _radius as Number = 0;
 
-    // Pre-loaded rotated number bitmaps
-    private var _numBitmaps as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
+    // Standard set: hour 0/24 at top.
+    private var _numBitmapsStd as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
+    // Noon-at-top set: hour 12 at top.
+    private var _numBitmapsNoon as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
 
-    // Month abbreviations
+    // Cached per-frame so getXY/drawHourHand share the same orientation.
+    private var _noonOffsetDeg as Float = 0.0;
+
     private var _monthNames as Array<String> = [
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -33,31 +37,55 @@ class TwentyFourHourView extends WatchUi.WatchFace {
         _centerY = h / 2;
         _radius = (w < h ? w : h) / 2;
 
-        // Load rotated number bitmaps
-        _numBitmaps[0] = WatchUi.loadResource(Rez.Drawables.Num00) as BitmapResource;
-        _numBitmaps[1] = WatchUi.loadResource(Rez.Drawables.Num01) as BitmapResource;
-        _numBitmaps[2] = WatchUi.loadResource(Rez.Drawables.Num02) as BitmapResource;
-        _numBitmaps[3] = WatchUi.loadResource(Rez.Drawables.Num03) as BitmapResource;
-        _numBitmaps[4] = WatchUi.loadResource(Rez.Drawables.Num04) as BitmapResource;
-        _numBitmaps[5] = WatchUi.loadResource(Rez.Drawables.Num05) as BitmapResource;
-        _numBitmaps[6] = WatchUi.loadResource(Rez.Drawables.Num06) as BitmapResource;
-        _numBitmaps[7] = WatchUi.loadResource(Rez.Drawables.Num07) as BitmapResource;
-        _numBitmaps[8] = WatchUi.loadResource(Rez.Drawables.Num08) as BitmapResource;
-        _numBitmaps[9] = WatchUi.loadResource(Rez.Drawables.Num09) as BitmapResource;
-        _numBitmaps[10] = WatchUi.loadResource(Rez.Drawables.Num10) as BitmapResource;
-        _numBitmaps[11] = WatchUi.loadResource(Rez.Drawables.Num11) as BitmapResource;
-        _numBitmaps[12] = WatchUi.loadResource(Rez.Drawables.Num12) as BitmapResource;
-        _numBitmaps[13] = WatchUi.loadResource(Rez.Drawables.Num13) as BitmapResource;
-        _numBitmaps[14] = WatchUi.loadResource(Rez.Drawables.Num14) as BitmapResource;
-        _numBitmaps[15] = WatchUi.loadResource(Rez.Drawables.Num15) as BitmapResource;
-        _numBitmaps[16] = WatchUi.loadResource(Rez.Drawables.Num16) as BitmapResource;
-        _numBitmaps[17] = WatchUi.loadResource(Rez.Drawables.Num17) as BitmapResource;
-        _numBitmaps[18] = WatchUi.loadResource(Rez.Drawables.Num18) as BitmapResource;
-        _numBitmaps[19] = WatchUi.loadResource(Rez.Drawables.Num19) as BitmapResource;
-        _numBitmaps[20] = WatchUi.loadResource(Rez.Drawables.Num20) as BitmapResource;
-        _numBitmaps[21] = WatchUi.loadResource(Rez.Drawables.Num21) as BitmapResource;
-        _numBitmaps[22] = WatchUi.loadResource(Rez.Drawables.Num22) as BitmapResource;
-        _numBitmaps[23] = WatchUi.loadResource(Rez.Drawables.Num23) as BitmapResource;
+        _numBitmapsStd[0] = WatchUi.loadResource(Rez.Drawables.Num00) as BitmapResource;
+        _numBitmapsStd[1] = WatchUi.loadResource(Rez.Drawables.Num01) as BitmapResource;
+        _numBitmapsStd[2] = WatchUi.loadResource(Rez.Drawables.Num02) as BitmapResource;
+        _numBitmapsStd[3] = WatchUi.loadResource(Rez.Drawables.Num03) as BitmapResource;
+        _numBitmapsStd[4] = WatchUi.loadResource(Rez.Drawables.Num04) as BitmapResource;
+        _numBitmapsStd[5] = WatchUi.loadResource(Rez.Drawables.Num05) as BitmapResource;
+        _numBitmapsStd[6] = WatchUi.loadResource(Rez.Drawables.Num06) as BitmapResource;
+        _numBitmapsStd[7] = WatchUi.loadResource(Rez.Drawables.Num07) as BitmapResource;
+        _numBitmapsStd[8] = WatchUi.loadResource(Rez.Drawables.Num08) as BitmapResource;
+        _numBitmapsStd[9] = WatchUi.loadResource(Rez.Drawables.Num09) as BitmapResource;
+        _numBitmapsStd[10] = WatchUi.loadResource(Rez.Drawables.Num10) as BitmapResource;
+        _numBitmapsStd[11] = WatchUi.loadResource(Rez.Drawables.Num11) as BitmapResource;
+        _numBitmapsStd[12] = WatchUi.loadResource(Rez.Drawables.Num12) as BitmapResource;
+        _numBitmapsStd[13] = WatchUi.loadResource(Rez.Drawables.Num13) as BitmapResource;
+        _numBitmapsStd[14] = WatchUi.loadResource(Rez.Drawables.Num14) as BitmapResource;
+        _numBitmapsStd[15] = WatchUi.loadResource(Rez.Drawables.Num15) as BitmapResource;
+        _numBitmapsStd[16] = WatchUi.loadResource(Rez.Drawables.Num16) as BitmapResource;
+        _numBitmapsStd[17] = WatchUi.loadResource(Rez.Drawables.Num17) as BitmapResource;
+        _numBitmapsStd[18] = WatchUi.loadResource(Rez.Drawables.Num18) as BitmapResource;
+        _numBitmapsStd[19] = WatchUi.loadResource(Rez.Drawables.Num19) as BitmapResource;
+        _numBitmapsStd[20] = WatchUi.loadResource(Rez.Drawables.Num20) as BitmapResource;
+        _numBitmapsStd[21] = WatchUi.loadResource(Rez.Drawables.Num21) as BitmapResource;
+        _numBitmapsStd[22] = WatchUi.loadResource(Rez.Drawables.Num22) as BitmapResource;
+        _numBitmapsStd[23] = WatchUi.loadResource(Rez.Drawables.Num23) as BitmapResource;
+
+        _numBitmapsNoon[0] = WatchUi.loadResource(Rez.Drawables.NumNoon00) as BitmapResource;
+        _numBitmapsNoon[1] = WatchUi.loadResource(Rez.Drawables.NumNoon01) as BitmapResource;
+        _numBitmapsNoon[2] = WatchUi.loadResource(Rez.Drawables.NumNoon02) as BitmapResource;
+        _numBitmapsNoon[3] = WatchUi.loadResource(Rez.Drawables.NumNoon03) as BitmapResource;
+        _numBitmapsNoon[4] = WatchUi.loadResource(Rez.Drawables.NumNoon04) as BitmapResource;
+        _numBitmapsNoon[5] = WatchUi.loadResource(Rez.Drawables.NumNoon05) as BitmapResource;
+        _numBitmapsNoon[6] = WatchUi.loadResource(Rez.Drawables.NumNoon06) as BitmapResource;
+        _numBitmapsNoon[7] = WatchUi.loadResource(Rez.Drawables.NumNoon07) as BitmapResource;
+        _numBitmapsNoon[8] = WatchUi.loadResource(Rez.Drawables.NumNoon08) as BitmapResource;
+        _numBitmapsNoon[9] = WatchUi.loadResource(Rez.Drawables.NumNoon09) as BitmapResource;
+        _numBitmapsNoon[10] = WatchUi.loadResource(Rez.Drawables.NumNoon10) as BitmapResource;
+        _numBitmapsNoon[11] = WatchUi.loadResource(Rez.Drawables.NumNoon11) as BitmapResource;
+        _numBitmapsNoon[12] = WatchUi.loadResource(Rez.Drawables.NumNoon12) as BitmapResource;
+        _numBitmapsNoon[13] = WatchUi.loadResource(Rez.Drawables.NumNoon13) as BitmapResource;
+        _numBitmapsNoon[14] = WatchUi.loadResource(Rez.Drawables.NumNoon14) as BitmapResource;
+        _numBitmapsNoon[15] = WatchUi.loadResource(Rez.Drawables.NumNoon15) as BitmapResource;
+        _numBitmapsNoon[16] = WatchUi.loadResource(Rez.Drawables.NumNoon16) as BitmapResource;
+        _numBitmapsNoon[17] = WatchUi.loadResource(Rez.Drawables.NumNoon17) as BitmapResource;
+        _numBitmapsNoon[18] = WatchUi.loadResource(Rez.Drawables.NumNoon18) as BitmapResource;
+        _numBitmapsNoon[19] = WatchUi.loadResource(Rez.Drawables.NumNoon19) as BitmapResource;
+        _numBitmapsNoon[20] = WatchUi.loadResource(Rez.Drawables.NumNoon20) as BitmapResource;
+        _numBitmapsNoon[21] = WatchUi.loadResource(Rez.Drawables.NumNoon21) as BitmapResource;
+        _numBitmapsNoon[22] = WatchUi.loadResource(Rez.Drawables.NumNoon22) as BitmapResource;
+        _numBitmapsNoon[23] = WatchUi.loadResource(Rez.Drawables.NumNoon23) as BitmapResource;
     }
 
     function onShow() as Void {
@@ -71,10 +99,12 @@ class TwentyFourHourView extends WatchUi.WatchFace {
         var hour = clockTime.hour;
         var min = clockTime.min;
 
-        drawDial(dc);
+        var noonAtTop = readBool("NoonAtTop", false);
+        _noonOffsetDeg = noonAtTop ? 180.0 : 0.0;
 
-        var showMinuteHand = Application.Properties.getValue("ShowMinuteHand") as Boolean;
-        if (showMinuteHand) {
+        drawDial(dc, noonAtTop);
+
+        if (readBool("ShowMinuteHand", true)) {
             drawMinuteHand(dc, min);
         }
         drawHourHand(dc, hour, min);
@@ -85,36 +115,56 @@ class TwentyFourHourView extends WatchUi.WatchFace {
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(_centerX, _centerY, 1);
 
-        var showDate = Application.Properties.getValue("ShowDate") as Boolean;
-        if (showDate) {
+        if (readBool("ShowDate", true)) {
             drawDate(dc);
+        }
+
+        if (readBool("ShowBattery", false)) {
+            drawBattery(dc);
         }
     }
 
-    // Get x,y at a given radius from center for a 24h position
+    // Application.Properties.getValue() can return null in some sim states
+    // even when a default is declared, so coerce to a known fallback.
+    private function readBool(key as String, fallback as Boolean) as Boolean {
+        var v = Application.Properties.getValue(key);
+        if (v == null) { return fallback; }
+        return v as Boolean;
+    }
+
+    private function readNumber(key as String, fallback as Number) as Number {
+        var v = Application.Properties.getValue(key);
+        if (v == null) { return fallback; }
+        return v as Number;
+    }
+
     private function getXY(hourFloat as Float, r as Number) as Array<Number> {
-        var angleDeg = (hourFloat * 15.0) - 90.0;
+        var angleDeg = (hourFloat * 15.0) - 90.0 + _noonOffsetDeg;
         var angleRad = Math.toRadians(angleDeg);
         var x = _centerX + (r * Math.cos(angleRad)).toNumber();
         var y = _centerY + (r * Math.sin(angleRad)).toNumber();
         return [x, y];
     }
 
-    private function drawDial(dc as Dc) as Void {
-        // Layout (from edge inward, radius=130 on 260x260):
-        //   Number bitmaps: centered at r=122 (~8px from edge)
-        //   Tick outer: r=114 (16px from edge)
-        //   Hour tick inner: r=100 (30px from edge) -> 14px long
-        //   Quarter tick inner: r=107 (23px from edge) -> 7px long
+    private function highlightColor(idx as Number) as Number {
+        if (idx == 1) { return Graphics.COLOR_YELLOW; }
+        if (idx == 2) { return Graphics.COLOR_RED; }
+        if (idx == 3) { return Graphics.COLOR_GREEN; }
+        if (idx == 4) { return Graphics.COLOR_BLUE; }
+        if (idx == 5) { return Graphics.COLOR_ORANGE; }
+        return Graphics.COLOR_WHITE;
+    }
 
+    private function drawDial(dc as Dc, noonAtTop as Boolean) as Void {
         var numberRadius = _radius - 8;
         var tickOuter = _radius - 18;
         var hourTickInner = _radius - 32;
         var quarterTickInner = _radius - 25;
 
-        // Draw rotated number bitmaps on the outside
+        var bitmaps = noonAtTop ? _numBitmapsNoon : _numBitmapsStd;
+
         for (var h = 0; h < 24; h++) {
-            var bmp = _numBitmaps[h];
+            var bmp = bitmaps[h];
             if (bmp != null) {
                 var pt = getXY(h.toFloat(), numberRadius);
                 var bw = bmp.getWidth();
@@ -123,17 +173,25 @@ class TwentyFourHourView extends WatchUi.WatchFace {
             }
         }
 
-        // Draw tick marks every 15 minutes (96 ticks)
+        // 96 ticks every 15 min on the 24h dial. The 5-minute marks for the
+        // 60-min minute hand land every 30°, which is every 8th tick here
+        // (i.e., even-numbered hour positions).
+        var fiveMinChoice = readNumber("FiveMinTickColor", 0);
+        var fiveMinColor = highlightColor(fiveMinChoice);
+        var highlightOn = (fiveMinChoice > 0);
+
         dc.setPenWidth(1);
         for (var i = 0; i < 96; i++) {
             var hourFloat = i / 4.0;
             var isHour = (i % 4 == 0);
+            var isFiveMin = (i % 8 == 0);
 
             var outerPt = getXY(hourFloat, tickOuter);
 
             if (isHour) {
                 var innerPt = getXY(hourFloat, hourTickInner);
-                dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+                var color = (highlightOn && isFiveMin) ? fiveMinColor : Graphics.COLOR_WHITE;
+                dc.setColor(color, Graphics.COLOR_TRANSPARENT);
                 dc.drawLine(outerPt[0], outerPt[1], innerPt[0], innerPt[1]);
             } else {
                 var innerPt = getXY(hourFloat, quarterTickInner);
@@ -145,10 +203,9 @@ class TwentyFourHourView extends WatchUi.WatchFace {
 
     private function drawHourHand(dc as Dc, hour as Number, min as Number) as Void {
         var hourFloat = hour.toFloat() + min.toFloat() / 60.0;
-        var angleDeg = (hourFloat * 15.0) - 90.0;
+        var angleDeg = (hourFloat * 15.0) - 90.0 + _noonOffsetDeg;
         var angleRad = Math.toRadians(angleDeg);
 
-        // Arrow tip reaches just to the inner end of the quarter ticks
         var tipRadius = _radius - 26;
         var tailLength = 15;
 
@@ -165,13 +222,11 @@ class TwentyFourHourView extends WatchUi.WatchFace {
         var shaftEndX = _centerX + (shaftEndRadius * Math.cos(angleRad)).toNumber();
         var shaftEndY = _centerY + (shaftEndRadius * Math.sin(angleRad)).toNumber();
 
-        // Draw shaft
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(2);
         dc.drawLine(tailX, tailY, shaftEndX, shaftEndY);
         dc.setPenWidth(1);
 
-        // Arrow head
         var perpRad = angleRad + Math.PI / 2.0;
         var cosPerp = Math.cos(perpRad);
         var sinPerp = Math.sin(perpRad);
@@ -201,7 +256,12 @@ class TwentyFourHourView extends WatchUi.WatchFace {
         var tailX = _centerX - (tailLength * Math.cos(angleRad)).toNumber();
         var tailY = _centerY - (tailLength * Math.sin(angleRad)).toNumber();
 
-        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+        // Match the 5-min tick highlight color so the minute-reading UI moves
+        // together; gray fallback when highlight is off.
+        var fiveMinChoice = readNumber("FiveMinTickColor", 0);
+        var color = (fiveMinChoice > 0) ? highlightColor(fiveMinChoice) : Graphics.COLOR_LT_GRAY;
+
+        dc.setColor(color, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(2);
         dc.drawLine(tailX, tailY, tipX, tipY);
         dc.setPenWidth(1);
@@ -234,6 +294,44 @@ class TwentyFourHourView extends WatchUi.WatchFace {
             dateY,
             font,
             dateStr,
+            Graphics.TEXT_JUSTIFY_CENTER
+        );
+    }
+
+    private function drawBattery(dc as Dc) as Void {
+        var stats = System.getSystemStats();
+        var pct = stats.battery.toNumber();
+        var battStr = pct.format("%d") + "%";
+
+        var font = Graphics.FONT_XTINY;
+        var textWidth = dc.getTextWidthInPixels(battStr, font);
+        var fontHeight = dc.getFontHeight(font);
+
+        // Mirror the date placement: above center.
+        var battY = _centerY - 40 - fontHeight;
+
+        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(
+            _centerX - textWidth / 2 - 3,
+            battY - 1,
+            textWidth + 6,
+            fontHeight + 2
+        );
+
+        // Color-code low battery so a glance tells you state.
+        var color = Graphics.COLOR_LT_GRAY;
+        if (pct <= 10) {
+            color = Graphics.COLOR_RED;
+        } else if (pct <= 25) {
+            color = Graphics.COLOR_YELLOW;
+        }
+
+        dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(
+            _centerX,
+            battY,
+            font,
+            battStr,
             Graphics.TEXT_JUSTIFY_CENTER
         );
     }

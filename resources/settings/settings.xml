@@ -8,4 +8,23 @@
         <settingConfig type="boolean" />
     </setting>
 
+    <setting propertyKey="@Properties.ShowBattery" title="@Strings.ShowBatteryTitle">
+        <settingConfig type="boolean" />
+    </setting>
+
+    <setting propertyKey="@Properties.NoonAtTop" title="@Strings.NoonAtTopTitle">
+        <settingConfig type="boolean" />
+    </setting>
+
+    <setting propertyKey="@Properties.FiveMinTickColor" title="@Strings.FiveMinTickColorTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.ColorOff</listEntry>
+            <listEntry value="1">@Strings.ColorYellow</listEntry>
+            <listEntry value="2">@Strings.ColorRed</listEntry>
+            <listEntry value="3">@Strings.ColorGreen</listEntry>
+            <listEntry value="4">@Strings.ColorBlue</listEntry>
+            <listEntry value="5">@Strings.ColorOrange</listEntry>
+        </settingConfig>
+    </setting>
+
 </settings>

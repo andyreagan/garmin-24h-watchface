@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Generate pre-rotated number bitmaps for the 24-hour watch face dial.
 
-Each number (24, 1-23) is rendered as white text on a transparent background,
-rotated so it's oriented radially around the dial.
+Two sets are produced:
+  - Standard set (numbers/num_NN.png): hour 0/24 at top of dial.
+  - Noon-at-top set (numbers/num_noon_NN.png): hour 12 at top of dial.
 
-Numbers on the top half of the dial (18 through 6) are oriented so they read
-from the outside inward (tops pointing toward center).
-Numbers on the bottom half (7 through 17) are flipped 180° so they read
-from the inside outward (readable from the bottom).
+In both sets, numbers on the upper half of the dial read normally; numbers
+on the lower half are flipped 180° so they're readable from the bottom.
 
 Requires: pip3 install Pillow
 """
@@ -22,55 +21,64 @@ FONT_PATH = "/System/Library/Fonts/Helvetica.ttc"
 FONT_INDEX = 1  # Bold
 
 
+def render(label, angle_deg, flip):
+    if flip:
+        angle_deg += 180.0
+
+    bbox = font.getbbox(label)
+    tw = bbox[2] - bbox[0]
+    th = bbox[3] - bbox[1]
+
+    size = int(math.sqrt(tw * tw + th * th)) + 8
+    if size % 2 == 1:
+        size += 1
+
+    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    x = (size - tw) / 2 - bbox[0]
+    y = (size - th) / 2 - bbox[1]
+    draw.text((x, y), label, font=font, fill=(255, 255, 255, 255))
+
+    rotated = img.rotate(-angle_deg, resample=Image.BICUBIC, expand=False)
+    bbox_r = rotated.getbbox()
+    if bbox_r:
+        rotated = rotated.crop(bbox_r)
+    return rotated
+
+
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
-
+    global font
     font = ImageFont.truetype(FONT_PATH, FONT_SIZE, index=FONT_INDEX)
+
     labels = ["24"] + [str(i) for i in range(1, 24)]
 
-    # Indices that should be flipped 180° (hours 7-17 → indices 7-17)
-    flip_indices = set(range(7, 18))
+    # Standard set: hour 0 at top. Hours 7..17 are on the bottom half.
+    std_flip = set(range(7, 18))
+    # Noon-at-top set: hour 12 at top. Bottom half is hours 19..23 and 0..5.
+    noon_flip = set(range(19, 24)) | set(range(0, 6))
 
     for i, label in enumerate(labels):
-        # Each hour = 15 degrees clockwise from top
-        angle_deg = i * 15.0
+        # Standard
+        angle_std = i * 15.0
+        img_std = render(label, angle_std, i in std_flip)
+        path_std = os.path.join(OUT_DIR, f"num_{i:02d}.png")
+        img_std.save(path_std)
 
-        # For hours 7-17, add 180° so text reads from the bottom
-        if i in flip_indices:
-            angle_deg += 180.0
+        # Noon-at-top: hour i sits at angle (i-12)*15° from top
+        angle_noon = (i - 12) * 15.0
+        img_noon = render(label, angle_noon, i in noon_flip)
+        path_noon = os.path.join(OUT_DIR, f"num_noon_{i:02d}.png")
+        img_noon.save(path_noon)
 
-        # Measure text
-        bbox = font.getbbox(label)
-        tw = bbox[2] - bbox[0]
-        th = bbox[3] - bbox[1]
+        flipped_std = " (flipped)" if i in std_flip else ""
+        flipped_noon = " (flipped)" if i in noon_flip else ""
+        print(
+            f"  {label:>2}: std {img_std.size[0]:2d}x{img_std.size[1]:<2d}{flipped_std:>10s}"
+            f"  | noon {img_noon.size[0]:2d}x{img_noon.size[1]:<2d}{flipped_noon}"
+        )
 
-        # Canvas large enough that rotation never clips
-        size = int(math.sqrt(tw * tw + th * th)) + 8
-        if size % 2 == 1:
-            size += 1
-
-        img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-        draw = ImageDraw.Draw(img)
-
-        # Draw text centered on canvas
-        x = (size - tw) / 2 - bbox[0]
-        y = (size - th) / 2 - bbox[1]
-        draw.text((x, y), label, font=font, fill=(255, 255, 255, 255))
-
-        # Rotate clockwise (PIL rotates CCW, so negate)
-        rotated = img.rotate(-angle_deg, resample=Image.BICUBIC, expand=False)
-
-        # Crop to tight bounding box
-        bbox_r = rotated.getbbox()
-        if bbox_r:
-            rotated = rotated.crop(bbox_r)
-
-        out_path = os.path.join(OUT_DIR, f"num_{i:02d}.png")
-        rotated.save(out_path)
-        flipped = " (flipped)" if i in flip_indices else ""
-        print(f"  {label:>2}: {rotated.size[0]:2d}x{rotated.size[1]:<2d} @ {angle_deg:5.1f}°{flipped}  -> {out_path}")
-
-    print(f"\nGenerated {len(labels)} number images in {OUT_DIR}")
+    print(f"\nGenerated {len(labels) * 2} number images in {OUT_DIR}")
 
 
 if __name__ == "__main__":
