@@ -40,6 +40,40 @@ Inspired by the [Spokes Worldtime](https://apps.garmin.cn/zh-CN/apps/ada4fbf3-9a
 - Color-highlighted 5-minute tick marks with matching minute hand
 - Battery % readout
 
+## Connect IQ Store Listing
+
+Short tagline:
+
+> A clean 24-hour analog watch face — see your full day at a glance.
+
+Full description:
+
+> A minimalist 24-hour analog watch face inspired by world-time and pilot watches. The single hour hand completes one full rotation per day, giving you an intuitive sense of where you are in your day — morning, afternoon, and night — at a glance.
+>
+> Features:
+>
+> • 24-hour dial — choose 24 at top (midnight) or 12 at top (noon)
+> • Bold, radially-oriented hour numbers — top half reads from the top, bottom half reads from the bottom for easy legibility all around the dial
+> • Hour and quarter-hour tick marks, with optional 5-minute tick highlights in Yellow, Red, Green, Blue, or Orange — the minute hand picks up the same color
+> • Hour hand with arrowhead for precise time reading
+> • Optional minute hand
+> • Optional date display
+> • Optional battery percentage, color-coded yellow at 25% or below and red at 10% or below
+>
+> Settings (via Garmin Connect Mobile):
+>
+> • Noon at top (12 at top instead of 24)
+> • 5-minute tick highlight color
+> • Show/hide minute hand
+> • Show/hide date
+> • Show/hide battery %
+
+Per-version release notes (v2.0.0):
+
+> • Noon-at-top dial option (12 at top instead of 24)
+> • Color-highlighted 5-minute tick marks with matching minute hand
+> • Battery % readout with low-battery color coding
+
 ## Supported Devices
 
 Forerunner 255/265/945/955/965, fēnix 7/7S/7X/7 Pro/7S Pro/7X Pro, fēnix 8 (AMOLED & Solar), epix (Gen 2) / epix Pro, Venu 2/2S/2 Plus/3/3S, vívoactive 5, and more.
