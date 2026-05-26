@@ -17,6 +17,8 @@ class TwentyFourHourView extends WatchUi.WatchFace {
     private var _numBitmapsStd as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
     // Noon-at-top set: hour 12 at top.
     private var _numBitmapsNoon as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
+    // Upright set: not rotated; shared between std and noon orientations.
+    private var _numBitmapsUpright as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
 
     // Cached per-frame so getXY/drawHourHand share the same orientation.
     private var _noonOffsetDeg as Float = 0.0;
@@ -86,6 +88,31 @@ class TwentyFourHourView extends WatchUi.WatchFace {
         _numBitmapsNoon[21] = WatchUi.loadResource(Rez.Drawables.NumNoon21) as BitmapResource;
         _numBitmapsNoon[22] = WatchUi.loadResource(Rez.Drawables.NumNoon22) as BitmapResource;
         _numBitmapsNoon[23] = WatchUi.loadResource(Rez.Drawables.NumNoon23) as BitmapResource;
+
+        _numBitmapsUpright[0] = WatchUi.loadResource(Rez.Drawables.NumUp00) as BitmapResource;
+        _numBitmapsUpright[1] = WatchUi.loadResource(Rez.Drawables.NumUp01) as BitmapResource;
+        _numBitmapsUpright[2] = WatchUi.loadResource(Rez.Drawables.NumUp02) as BitmapResource;
+        _numBitmapsUpright[3] = WatchUi.loadResource(Rez.Drawables.NumUp03) as BitmapResource;
+        _numBitmapsUpright[4] = WatchUi.loadResource(Rez.Drawables.NumUp04) as BitmapResource;
+        _numBitmapsUpright[5] = WatchUi.loadResource(Rez.Drawables.NumUp05) as BitmapResource;
+        _numBitmapsUpright[6] = WatchUi.loadResource(Rez.Drawables.NumUp06) as BitmapResource;
+        _numBitmapsUpright[7] = WatchUi.loadResource(Rez.Drawables.NumUp07) as BitmapResource;
+        _numBitmapsUpright[8] = WatchUi.loadResource(Rez.Drawables.NumUp08) as BitmapResource;
+        _numBitmapsUpright[9] = WatchUi.loadResource(Rez.Drawables.NumUp09) as BitmapResource;
+        _numBitmapsUpright[10] = WatchUi.loadResource(Rez.Drawables.NumUp10) as BitmapResource;
+        _numBitmapsUpright[11] = WatchUi.loadResource(Rez.Drawables.NumUp11) as BitmapResource;
+        _numBitmapsUpright[12] = WatchUi.loadResource(Rez.Drawables.NumUp12) as BitmapResource;
+        _numBitmapsUpright[13] = WatchUi.loadResource(Rez.Drawables.NumUp13) as BitmapResource;
+        _numBitmapsUpright[14] = WatchUi.loadResource(Rez.Drawables.NumUp14) as BitmapResource;
+        _numBitmapsUpright[15] = WatchUi.loadResource(Rez.Drawables.NumUp15) as BitmapResource;
+        _numBitmapsUpright[16] = WatchUi.loadResource(Rez.Drawables.NumUp16) as BitmapResource;
+        _numBitmapsUpright[17] = WatchUi.loadResource(Rez.Drawables.NumUp17) as BitmapResource;
+        _numBitmapsUpright[18] = WatchUi.loadResource(Rez.Drawables.NumUp18) as BitmapResource;
+        _numBitmapsUpright[19] = WatchUi.loadResource(Rez.Drawables.NumUp19) as BitmapResource;
+        _numBitmapsUpright[20] = WatchUi.loadResource(Rez.Drawables.NumUp20) as BitmapResource;
+        _numBitmapsUpright[21] = WatchUi.loadResource(Rez.Drawables.NumUp21) as BitmapResource;
+        _numBitmapsUpright[22] = WatchUi.loadResource(Rez.Drawables.NumUp22) as BitmapResource;
+        _numBitmapsUpright[23] = WatchUi.loadResource(Rez.Drawables.NumUp23) as BitmapResource;
     }
 
     function onShow() as Void {
@@ -156,20 +183,27 @@ class TwentyFourHourView extends WatchUi.WatchFace {
     }
 
     private function drawDial(dc as Dc, noonAtTop as Boolean) as Void {
-        var numberRadius = _radius - 8;
+        // Upright labels are taller than rotated ones at the cardinals, so
+        // pull them in slightly to avoid clipping at the dial edge.
+        var labelStyle = readNumber("TickLabelStyle", 0);
+        var numberRadius = (labelStyle == 1) ? _radius - 11 : _radius - 8;
         var tickOuter = _radius - 18;
         var hourTickInner = _radius - 32;
         var quarterTickInner = _radius - 25;
 
-        var bitmaps = noonAtTop ? _numBitmapsNoon : _numBitmapsStd;
+        if (labelStyle != 2) {
+            var bitmaps = (labelStyle == 1)
+                ? _numBitmapsUpright
+                : (noonAtTop ? _numBitmapsNoon : _numBitmapsStd);
 
-        for (var h = 0; h < 24; h++) {
-            var bmp = bitmaps[h];
-            if (bmp != null) {
-                var pt = getXY(h.toFloat(), numberRadius);
-                var bw = bmp.getWidth();
-                var bh = bmp.getHeight();
-                dc.drawBitmap(pt[0] - bw / 2, pt[1] - bh / 2, bmp);
+            for (var h = 0; h < 24; h++) {
+                var bmp = bitmaps[h];
+                if (bmp != null) {
+                    var pt = getXY(h.toFloat(), numberRadius);
+                    var bw = bmp.getWidth();
+                    var bh = bmp.getHeight();
+                    dc.drawBitmap(pt[0] - bw / 2, pt[1] - bh / 2, bmp);
+                }
             }
         }
 
@@ -198,6 +232,26 @@ class TwentyFourHourView extends WatchUi.WatchFace {
                 dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
                 dc.drawLine(outerPt[0], outerPt[1], innerPt[0], innerPt[1]);
             }
+        }
+
+        if (readBool("ShowMinuteMarks", false)) {
+            var markColor = highlightOn ? fiveMinColor : Graphics.COLOR_LT_GRAY;
+            drawMinuteMarks(dc, markColor);
+        }
+    }
+
+    // Inner ring of 60 dots — one per minute on the 60-min minute hand,
+    // placed just outside the minute hand tip so it points at them. Unlike
+    // the 24h dial ticks, these don't respect NoonAtTop: the minute hand
+    // always reads conventionally (0 at top).
+    private function drawMinuteMarks(dc as Dc, color as Number) as Void {
+        var markRadius = _radius - 40;
+        dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+        for (var m = 0; m < 60; m++) {
+            var angleRad = Math.toRadians(m * 6.0 - 90.0);
+            var x = _centerX + (markRadius * Math.cos(angleRad)).toNumber();
+            var y = _centerY + (markRadius * Math.sin(angleRad)).toNumber();
+            dc.fillCircle(x, y, 1);
         }
     }
 

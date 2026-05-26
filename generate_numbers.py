@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """Generate pre-rotated number bitmaps for the 24-hour watch face dial.
 
-Two sets are produced:
-  - Standard set (numbers/num_NN.png): hour 0/24 at top of dial.
-  - Noon-at-top set (numbers/num_noon_NN.png): hour 12 at top of dial.
+Three sets are produced:
+  - Standard set (numbers/num_NN.png): rotated, hour 0/24 at top of dial.
+  - Noon-at-top set (numbers/num_noon_NN.png): rotated, hour 12 at top.
+  - Upright set (numbers/num_up_NN.png): no rotation, used for both
+    orientations (the slot position differs, the bitmap doesn't).
 
-In both sets, numbers on the upper half of the dial read normally; numbers
-on the lower half are flipped 180° so they're readable from the bottom.
+In the rotated sets, numbers on the upper half of the dial read normally;
+numbers on the lower half are flipped 180° so they're readable from the
+bottom. In the upright set, all numbers read normally.
 
 Requires: pip3 install Pillow
 """
@@ -71,14 +74,12 @@ def main():
         path_noon = os.path.join(OUT_DIR, f"num_noon_{i:02d}.png")
         img_noon.save(path_noon)
 
-        flipped_std = " (flipped)" if i in std_flip else ""
-        flipped_noon = " (flipped)" if i in noon_flip else ""
-        print(
-            f"  {label:>2}: std {img_std.size[0]:2d}x{img_std.size[1]:<2d}{flipped_std:>10s}"
-            f"  | noon {img_noon.size[0]:2d}x{img_noon.size[1]:<2d}{flipped_noon}"
-        )
+        # Upright: no rotation, no flip. Same bitmap for both orientations.
+        img_up = render(label, 0.0, False)
+        path_up = os.path.join(OUT_DIR, f"num_up_{i:02d}.png")
+        img_up.save(path_up)
 
-    print(f"\nGenerated {len(labels) * 2} number images in {OUT_DIR}")
+    print(f"\nGenerated {len(labels) * 3} number images in {OUT_DIR}")
 
 
 if __name__ == "__main__":

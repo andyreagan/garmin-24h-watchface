@@ -11,4 +11,9 @@
     <string id="ColorGreen">Green</string>
     <string id="ColorBlue">Blue</string>
     <string id="ColorOrange">Orange</string>
+    <string id="TickLabelStyleTitle">Hour Number Style</string>
+    <string id="TickLabelRotated">Rotated</string>
+    <string id="TickLabelUpright">Upright</string>
+    <string id="TickLabelOff">Off</string>
+    <string id="ShowMinuteMarksTitle">Show Minute Marks</string>
 </strings>

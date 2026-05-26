@@ -4,4 +4,6 @@
     <property id="ShowBattery" type="boolean">false</property>
     <property id="NoonAtTop" type="boolean">false</property>
     <property id="FiveMinTickColor" type="number">0</property>
+    <property id="TickLabelStyle" type="number">0</property>
+    <property id="ShowMinuteMarks" type="boolean">false</property>
 </properties>

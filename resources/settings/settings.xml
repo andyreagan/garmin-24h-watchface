@@ -27,4 +27,16 @@
         </settingConfig>
     </setting>
 
+    <setting propertyKey="@Properties.TickLabelStyle" title="@Strings.TickLabelStyleTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.TickLabelRotated</listEntry>
+            <listEntry value="1">@Strings.TickLabelUpright</listEntry>
+            <listEntry value="2">@Strings.TickLabelOff</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.ShowMinuteMarks" title="@Strings.ShowMinuteMarksTitle">
+        <settingConfig type="boolean" />
+    </setting>
+
 </settings>

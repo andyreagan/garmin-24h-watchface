@@ -48,4 +48,28 @@
     <bitmap id="NumNoon21" filename="numbers/num_noon_21.png" />
     <bitmap id="NumNoon22" filename="numbers/num_noon_22.png" />
     <bitmap id="NumNoon23" filename="numbers/num_noon_23.png" />
+    <bitmap id="NumUp00" filename="numbers/num_up_00.png" />
+    <bitmap id="NumUp01" filename="numbers/num_up_01.png" />
+    <bitmap id="NumUp02" filename="numbers/num_up_02.png" />
+    <bitmap id="NumUp03" filename="numbers/num_up_03.png" />
+    <bitmap id="NumUp04" filename="numbers/num_up_04.png" />
+    <bitmap id="NumUp05" filename="numbers/num_up_05.png" />
+    <bitmap id="NumUp06" filename="numbers/num_up_06.png" />
+    <bitmap id="NumUp07" filename="numbers/num_up_07.png" />
+    <bitmap id="NumUp08" filename="numbers/num_up_08.png" />
+    <bitmap id="NumUp09" filename="numbers/num_up_09.png" />
+    <bitmap id="NumUp10" filename="numbers/num_up_10.png" />
+    <bitmap id="NumUp11" filename="numbers/num_up_11.png" />
+    <bitmap id="NumUp12" filename="numbers/num_up_12.png" />
+    <bitmap id="NumUp13" filename="numbers/num_up_13.png" />
+    <bitmap id="NumUp14" filename="numbers/num_up_14.png" />
+    <bitmap id="NumUp15" filename="numbers/num_up_15.png" />
+    <bitmap id="NumUp16" filename="numbers/num_up_16.png" />
+    <bitmap id="NumUp17" filename="numbers/num_up_17.png" />
+    <bitmap id="NumUp18" filename="numbers/num_up_18.png" />
+    <bitmap id="NumUp19" filename="numbers/num_up_19.png" />
+    <bitmap id="NumUp20" filename="numbers/num_up_20.png" />
+    <bitmap id="NumUp21" filename="numbers/num_up_21.png" />
+    <bitmap id="NumUp22" filename="numbers/num_up_22.png" />
+    <bitmap id="NumUp23" filename="numbers/num_up_23.png" />
 </drawables>

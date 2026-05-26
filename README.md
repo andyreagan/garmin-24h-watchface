@@ -25,14 +25,20 @@ Inspired by the [Spokes Worldtime](https://apps.garmin.cn/zh-CN/apps/ada4fbf3-9a
 ## Features
 
 - **24-hour dial**: 24 at top (midnight), 6 at right, 12 at bottom, 18 at left (clockwise)
-- **Rotated number labels**: Numbers on the top half read normally; numbers on the bottom half are flipped so they read from below — legible all around the dial
+- **Hour number labels** — choose Rotated (top half upright, bottom half flipped so it reads from below), Upright (all labels horizontal), or Off (no labels, ticks only)
 - **Hour and quarter-hour tick marks**
 - **Hour hand** with arrowhead for precise time reading
 - **Noon-at-top option** — flip the dial so 12 sits at the top instead of 24
 - **5-minute tick highlights** — color the every-5-minute marks (Yellow / Red / Green / Blue / Orange) for quick minute reading; the minute hand picks up the same color
+- **Minute marks** — optional inner ring of 60 dots aligned to the minute hand, for 1-minute reading precision
 - **Battery percentage** — optional readout above the dial center, color-coded yellow ≤25% and red ≤10%
 - **Optional minute hand** (toggle in settings)
 - **Optional date display** (toggle in settings)
+
+### What's new in v3
+
+- Hour number style: Rotated / Upright / Off
+- Optional 60-dot minute mark ring for 1-minute reading precision
 
 ### What's new in v2
 
@@ -53,8 +59,9 @@ Full description:
 > Features:
 >
 > • 24-hour dial — choose 24 at top (midnight) or 12 at top (noon)
-> • Bold, radially-oriented hour numbers — top half reads from the top, bottom half reads from the bottom for easy legibility all around the dial
+> • Hour number style — Rotated (top half upright, bottom half flipped), Upright (all horizontal), or Off (ticks only)
 > • Hour and quarter-hour tick marks, with optional 5-minute tick highlights in Yellow, Red, Green, Blue, or Orange — the minute hand picks up the same color
+> • Optional 60-dot minute mark ring for 1-minute reading precision
 > • Hour hand with arrowhead for precise time reading
 > • Optional minute hand
 > • Optional date display
@@ -63,10 +70,17 @@ Full description:
 > Settings (via Garmin Connect Mobile):
 >
 > • Noon at top (12 at top instead of 24)
+> • Hour number style (Rotated / Upright / Off)
 > • 5-minute tick highlight color
+> • Show/hide minute marks (60-dot ring)
 > • Show/hide minute hand
 > • Show/hide date
 > • Show/hide battery %
+
+Per-version release notes (v3.0.0):
+
+> • Hour number style: Rotated / Upright / Off
+> • Optional 60-dot minute mark ring for 1-minute reading precision
 
 Per-version release notes (v2.0.0):
 
@@ -149,8 +163,9 @@ python3 generate_numbers.py    # Requires: pip3 install Pillow
 ```
 
 - Font: Helvetica Bold, 13pt
-- Top half (18→6): radially oriented, readable from outside
-- Bottom half (7→17): flipped 180°, readable from below
+- Rotated set, top half (18→6): radially oriented, readable from outside
+- Rotated set, bottom half (7→17): flipped 180°, readable from below
+- Upright set: no rotation, shared between standard and noon-at-top orientations
 
 ## Project Structure
 
@@ -159,8 +174,8 @@ python3 generate_numbers.py    # Requires: pip3 install Pillow
 │   ├── TwentyFourHourApp.mc        # App entry point
 │   └── TwentyFourHourView.mc       # Watch face drawing logic
 ├── resources/
-│   ├── drawables/numbers/           # 24 standard + 24 noon-at-top pre-rotated bitmaps
-│   ├── settings/                    # ShowMinuteHand, ShowDate, ShowBattery, NoonAtTop, FiveMinTickColor
+│   ├── drawables/numbers/           # 24 standard + 24 noon-at-top + 24 upright bitmaps
+│   ├── settings/                    # ShowMinuteHand, ShowDate, ShowBattery, NoonAtTop, FiveMinTickColor, TickLabelStyle, ShowMinuteMarks
 │   └── strings/                     # App name, setting titles
 ├── generate_numbers.py              # Regenerate rotated number bitmaps
 ├── generate_screen_images.py        # Generate store screen images
