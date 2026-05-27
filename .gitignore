@@ -5,5 +5,5 @@ bin/
 *.prg
 *.prg.debug.xml
 __pycache__/
-screenshot-v2-demo.png
-screenshot-0*.png
+.DS_Store
+screenshot-*.png
