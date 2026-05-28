@@ -14,6 +14,7 @@
     <string id="TickLabelStyleTitle">Hour Number Style</string>
     <string id="TickLabelRotated">Rotated</string>
     <string id="TickLabelUpright">Upright</string>
+    <string id="TickLabelRadial">Radial</string>
     <string id="TickLabelOff">Off</string>
     <string id="ShowMinuteMarksTitle">Show Minute Marks</string>
 </strings>

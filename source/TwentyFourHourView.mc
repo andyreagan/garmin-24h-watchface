@@ -19,6 +19,11 @@ class TwentyFourHourView extends WatchUi.WatchFace {
     private var _numBitmapsNoon as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
     // Upright set: not rotated; shared between std and noon orientations.
     private var _numBitmapsUpright as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
+    // Radial set: tangential rotation with no readability flip, so every
+    // glyph's bottom faces the dial center (lower-half numbers invert).
+    private var _numBitmapsRadial as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
+    // Radial noon-at-top set: same, hour 12 at top.
+    private var _numBitmapsRadialNoon as Array<BitmapResource or Null> = new Array<BitmapResource or Null>[24];
 
     // Cached per-frame so getXY/drawHourHand share the same orientation.
     private var _noonOffsetDeg as Float = 0.0;
@@ -113,6 +118,56 @@ class TwentyFourHourView extends WatchUi.WatchFace {
         _numBitmapsUpright[21] = WatchUi.loadResource(Rez.Drawables.NumUp21) as BitmapResource;
         _numBitmapsUpright[22] = WatchUi.loadResource(Rez.Drawables.NumUp22) as BitmapResource;
         _numBitmapsUpright[23] = WatchUi.loadResource(Rez.Drawables.NumUp23) as BitmapResource;
+
+        _numBitmapsRadial[0] = WatchUi.loadResource(Rez.Drawables.NumRad00) as BitmapResource;
+        _numBitmapsRadial[1] = WatchUi.loadResource(Rez.Drawables.NumRad01) as BitmapResource;
+        _numBitmapsRadial[2] = WatchUi.loadResource(Rez.Drawables.NumRad02) as BitmapResource;
+        _numBitmapsRadial[3] = WatchUi.loadResource(Rez.Drawables.NumRad03) as BitmapResource;
+        _numBitmapsRadial[4] = WatchUi.loadResource(Rez.Drawables.NumRad04) as BitmapResource;
+        _numBitmapsRadial[5] = WatchUi.loadResource(Rez.Drawables.NumRad05) as BitmapResource;
+        _numBitmapsRadial[6] = WatchUi.loadResource(Rez.Drawables.NumRad06) as BitmapResource;
+        _numBitmapsRadial[7] = WatchUi.loadResource(Rez.Drawables.NumRad07) as BitmapResource;
+        _numBitmapsRadial[8] = WatchUi.loadResource(Rez.Drawables.NumRad08) as BitmapResource;
+        _numBitmapsRadial[9] = WatchUi.loadResource(Rez.Drawables.NumRad09) as BitmapResource;
+        _numBitmapsRadial[10] = WatchUi.loadResource(Rez.Drawables.NumRad10) as BitmapResource;
+        _numBitmapsRadial[11] = WatchUi.loadResource(Rez.Drawables.NumRad11) as BitmapResource;
+        _numBitmapsRadial[12] = WatchUi.loadResource(Rez.Drawables.NumRad12) as BitmapResource;
+        _numBitmapsRadial[13] = WatchUi.loadResource(Rez.Drawables.NumRad13) as BitmapResource;
+        _numBitmapsRadial[14] = WatchUi.loadResource(Rez.Drawables.NumRad14) as BitmapResource;
+        _numBitmapsRadial[15] = WatchUi.loadResource(Rez.Drawables.NumRad15) as BitmapResource;
+        _numBitmapsRadial[16] = WatchUi.loadResource(Rez.Drawables.NumRad16) as BitmapResource;
+        _numBitmapsRadial[17] = WatchUi.loadResource(Rez.Drawables.NumRad17) as BitmapResource;
+        _numBitmapsRadial[18] = WatchUi.loadResource(Rez.Drawables.NumRad18) as BitmapResource;
+        _numBitmapsRadial[19] = WatchUi.loadResource(Rez.Drawables.NumRad19) as BitmapResource;
+        _numBitmapsRadial[20] = WatchUi.loadResource(Rez.Drawables.NumRad20) as BitmapResource;
+        _numBitmapsRadial[21] = WatchUi.loadResource(Rez.Drawables.NumRad21) as BitmapResource;
+        _numBitmapsRadial[22] = WatchUi.loadResource(Rez.Drawables.NumRad22) as BitmapResource;
+        _numBitmapsRadial[23] = WatchUi.loadResource(Rez.Drawables.NumRad23) as BitmapResource;
+
+        _numBitmapsRadialNoon[0] = WatchUi.loadResource(Rez.Drawables.NumRadNoon00) as BitmapResource;
+        _numBitmapsRadialNoon[1] = WatchUi.loadResource(Rez.Drawables.NumRadNoon01) as BitmapResource;
+        _numBitmapsRadialNoon[2] = WatchUi.loadResource(Rez.Drawables.NumRadNoon02) as BitmapResource;
+        _numBitmapsRadialNoon[3] = WatchUi.loadResource(Rez.Drawables.NumRadNoon03) as BitmapResource;
+        _numBitmapsRadialNoon[4] = WatchUi.loadResource(Rez.Drawables.NumRadNoon04) as BitmapResource;
+        _numBitmapsRadialNoon[5] = WatchUi.loadResource(Rez.Drawables.NumRadNoon05) as BitmapResource;
+        _numBitmapsRadialNoon[6] = WatchUi.loadResource(Rez.Drawables.NumRadNoon06) as BitmapResource;
+        _numBitmapsRadialNoon[7] = WatchUi.loadResource(Rez.Drawables.NumRadNoon07) as BitmapResource;
+        _numBitmapsRadialNoon[8] = WatchUi.loadResource(Rez.Drawables.NumRadNoon08) as BitmapResource;
+        _numBitmapsRadialNoon[9] = WatchUi.loadResource(Rez.Drawables.NumRadNoon09) as BitmapResource;
+        _numBitmapsRadialNoon[10] = WatchUi.loadResource(Rez.Drawables.NumRadNoon10) as BitmapResource;
+        _numBitmapsRadialNoon[11] = WatchUi.loadResource(Rez.Drawables.NumRadNoon11) as BitmapResource;
+        _numBitmapsRadialNoon[12] = WatchUi.loadResource(Rez.Drawables.NumRadNoon12) as BitmapResource;
+        _numBitmapsRadialNoon[13] = WatchUi.loadResource(Rez.Drawables.NumRadNoon13) as BitmapResource;
+        _numBitmapsRadialNoon[14] = WatchUi.loadResource(Rez.Drawables.NumRadNoon14) as BitmapResource;
+        _numBitmapsRadialNoon[15] = WatchUi.loadResource(Rez.Drawables.NumRadNoon15) as BitmapResource;
+        _numBitmapsRadialNoon[16] = WatchUi.loadResource(Rez.Drawables.NumRadNoon16) as BitmapResource;
+        _numBitmapsRadialNoon[17] = WatchUi.loadResource(Rez.Drawables.NumRadNoon17) as BitmapResource;
+        _numBitmapsRadialNoon[18] = WatchUi.loadResource(Rez.Drawables.NumRadNoon18) as BitmapResource;
+        _numBitmapsRadialNoon[19] = WatchUi.loadResource(Rez.Drawables.NumRadNoon19) as BitmapResource;
+        _numBitmapsRadialNoon[20] = WatchUi.loadResource(Rez.Drawables.NumRadNoon20) as BitmapResource;
+        _numBitmapsRadialNoon[21] = WatchUi.loadResource(Rez.Drawables.NumRadNoon21) as BitmapResource;
+        _numBitmapsRadialNoon[22] = WatchUi.loadResource(Rez.Drawables.NumRadNoon22) as BitmapResource;
+        _numBitmapsRadialNoon[23] = WatchUi.loadResource(Rez.Drawables.NumRadNoon23) as BitmapResource;
     }
 
     function onShow() as Void {
@@ -194,7 +249,9 @@ class TwentyFourHourView extends WatchUi.WatchFace {
         if (labelStyle != 2) {
             var bitmaps = (labelStyle == 1)
                 ? _numBitmapsUpright
-                : (noonAtTop ? _numBitmapsNoon : _numBitmapsStd);
+                : (labelStyle == 3
+                    ? (noonAtTop ? _numBitmapsRadialNoon : _numBitmapsRadial)
+                    : (noonAtTop ? _numBitmapsNoon : _numBitmapsStd));
 
             for (var h = 0; h < 24; h++) {
                 var bmp = bitmaps[h];

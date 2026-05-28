@@ -1,15 +1,22 @@
 #!/usr/bin/env python3
 """Generate pre-rotated number bitmaps for the 24-hour watch face dial.
 
-Three sets are produced:
+Five sets are produced:
   - Standard set (numbers/num_NN.png): rotated, hour 0/24 at top of dial.
   - Noon-at-top set (numbers/num_noon_NN.png): rotated, hour 12 at top.
   - Upright set (numbers/num_up_NN.png): no rotation, used for both
     orientations (the slot position differs, the bitmap doesn't).
+  - Radial set (numbers/num_radial_NN.png): standard layout, hour 0/24 at
+    top, same tangential rotation as the standard set but with NO
+    readability flip, so every number's baseline faces the dial center.
+  - Radial noon-at-top set (numbers/num_radial_noon_NN.png): same, hour 12
+    at top.
 
-In the rotated sets, numbers on the upper half of the dial read normally;
-numbers on the lower half are flipped 180° so they're readable from the
-bottom. In the upright set, all numbers read normally.
+In the rotated (standard/noon) sets, numbers on the upper half of the dial
+read normally; numbers on the lower half are flipped 180° so they're
+readable from the bottom. In the upright set, all numbers read normally.
+In the radial sets the flip is omitted, so lower-half numbers render upside
+down — every glyph's bottom points toward the center.
 
 Requires: pip3 install Pillow
 """
@@ -79,7 +86,17 @@ def main():
         path_up = os.path.join(OUT_DIR, f"num_up_{i:02d}.png")
         img_up.save(path_up)
 
-    print(f"\nGenerated {len(labels) * 3} number images in {OUT_DIR}")
+        # Radial: standard/noon angles with no readability flip, so every
+        # glyph's bottom faces the dial center (lower-half numbers invert).
+        img_rad = render(label, angle_std, False)
+        path_rad = os.path.join(OUT_DIR, f"num_radial_{i:02d}.png")
+        img_rad.save(path_rad)
+
+        img_rad_noon = render(label, angle_noon, False)
+        path_rad_noon = os.path.join(OUT_DIR, f"num_radial_noon_{i:02d}.png")
+        img_rad_noon.save(path_rad_noon)
+
+    print(f"\nGenerated {len(labels) * 5} number images in {OUT_DIR}")
 
 
 if __name__ == "__main__":

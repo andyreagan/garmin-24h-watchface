@@ -31,6 +31,7 @@
         <settingConfig type="list">
             <listEntry value="0">@Strings.TickLabelRotated</listEntry>
             <listEntry value="1">@Strings.TickLabelUpright</listEntry>
+            <listEntry value="3">@Strings.TickLabelRadial</listEntry>
             <listEntry value="2">@Strings.TickLabelOff</listEntry>
         </settingConfig>
     </setting>

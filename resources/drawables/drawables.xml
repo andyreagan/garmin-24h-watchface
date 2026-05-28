@@ -72,4 +72,52 @@
     <bitmap id="NumUp21" filename="numbers/num_up_21.png" />
     <bitmap id="NumUp22" filename="numbers/num_up_22.png" />
     <bitmap id="NumUp23" filename="numbers/num_up_23.png" />
+    <bitmap id="NumRad00" filename="numbers/num_radial_00.png" />
+    <bitmap id="NumRad01" filename="numbers/num_radial_01.png" />
+    <bitmap id="NumRad02" filename="numbers/num_radial_02.png" />
+    <bitmap id="NumRad03" filename="numbers/num_radial_03.png" />
+    <bitmap id="NumRad04" filename="numbers/num_radial_04.png" />
+    <bitmap id="NumRad05" filename="numbers/num_radial_05.png" />
+    <bitmap id="NumRad06" filename="numbers/num_radial_06.png" />
+    <bitmap id="NumRad07" filename="numbers/num_radial_07.png" />
+    <bitmap id="NumRad08" filename="numbers/num_radial_08.png" />
+    <bitmap id="NumRad09" filename="numbers/num_radial_09.png" />
+    <bitmap id="NumRad10" filename="numbers/num_radial_10.png" />
+    <bitmap id="NumRad11" filename="numbers/num_radial_11.png" />
+    <bitmap id="NumRad12" filename="numbers/num_radial_12.png" />
+    <bitmap id="NumRad13" filename="numbers/num_radial_13.png" />
+    <bitmap id="NumRad14" filename="numbers/num_radial_14.png" />
+    <bitmap id="NumRad15" filename="numbers/num_radial_15.png" />
+    <bitmap id="NumRad16" filename="numbers/num_radial_16.png" />
+    <bitmap id="NumRad17" filename="numbers/num_radial_17.png" />
+    <bitmap id="NumRad18" filename="numbers/num_radial_18.png" />
+    <bitmap id="NumRad19" filename="numbers/num_radial_19.png" />
+    <bitmap id="NumRad20" filename="numbers/num_radial_20.png" />
+    <bitmap id="NumRad21" filename="numbers/num_radial_21.png" />
+    <bitmap id="NumRad22" filename="numbers/num_radial_22.png" />
+    <bitmap id="NumRad23" filename="numbers/num_radial_23.png" />
+    <bitmap id="NumRadNoon00" filename="numbers/num_radial_noon_00.png" />
+    <bitmap id="NumRadNoon01" filename="numbers/num_radial_noon_01.png" />
+    <bitmap id="NumRadNoon02" filename="numbers/num_radial_noon_02.png" />
+    <bitmap id="NumRadNoon03" filename="numbers/num_radial_noon_03.png" />
+    <bitmap id="NumRadNoon04" filename="numbers/num_radial_noon_04.png" />
+    <bitmap id="NumRadNoon05" filename="numbers/num_radial_noon_05.png" />
+    <bitmap id="NumRadNoon06" filename="numbers/num_radial_noon_06.png" />
+    <bitmap id="NumRadNoon07" filename="numbers/num_radial_noon_07.png" />
+    <bitmap id="NumRadNoon08" filename="numbers/num_radial_noon_08.png" />
+    <bitmap id="NumRadNoon09" filename="numbers/num_radial_noon_09.png" />
+    <bitmap id="NumRadNoon10" filename="numbers/num_radial_noon_10.png" />
+    <bitmap id="NumRadNoon11" filename="numbers/num_radial_noon_11.png" />
+    <bitmap id="NumRadNoon12" filename="numbers/num_radial_noon_12.png" />
+    <bitmap id="NumRadNoon13" filename="numbers/num_radial_noon_13.png" />
+    <bitmap id="NumRadNoon14" filename="numbers/num_radial_noon_14.png" />
+    <bitmap id="NumRadNoon15" filename="numbers/num_radial_noon_15.png" />
+    <bitmap id="NumRadNoon16" filename="numbers/num_radial_noon_16.png" />
+    <bitmap id="NumRadNoon17" filename="numbers/num_radial_noon_17.png" />
+    <bitmap id="NumRadNoon18" filename="numbers/num_radial_noon_18.png" />
+    <bitmap id="NumRadNoon19" filename="numbers/num_radial_noon_19.png" />
+    <bitmap id="NumRadNoon20" filename="numbers/num_radial_noon_20.png" />
+    <bitmap id="NumRadNoon21" filename="numbers/num_radial_noon_21.png" />
+    <bitmap id="NumRadNoon22" filename="numbers/num_radial_noon_22.png" />
+    <bitmap id="NumRadNoon23" filename="numbers/num_radial_noon_23.png" />
 </drawables>
