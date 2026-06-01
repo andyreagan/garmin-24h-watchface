@@ -107,17 +107,47 @@ Install directly from your phone via the [Connect IQ Store listing](https://apps
 
 ## Build
 
-Requires the [Garmin Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/) and a developer key.
+Prerequisites:
+
+- [Garmin Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/) (the SDK path is the `SDK_DIR` env var below)
+- [1Password CLI](https://developer.1password.com/docs/cli/) (`brew install 1password-cli`), signed in (`op signin`)
+- A Connect IQ developer key stored in 1Password (one-time setup below)
+
+The Connect IQ store enforces that every version of an app be signed with the **same** developer key. This project keeps that key in 1Password and fetches it at build time via `op read`, so the path-to-key isn't baked into the repo.
+
+### One-time: stash the developer key in 1Password
+
+Create a Password item whose `password` field holds the base64-encoded key:
+
+```bash
+op item create --category=password \
+  --title='garmin-developer-key' --vault=Private \
+  "password[concealed]=$(base64 -i /path/to/developer_key)"
+```
+
+The default reference both build scripts read is `op://Private/garmin-developer-key/password`. Override with the `KEY_REF` env var if you put it elsewhere.
+
+### Building
+
+```bash
+./build.sh                 # Release .iq for every device in manifest.xml (sign + ship)
+./build.sh --debug         # Debug .prg for fr955 (load into the simulator)
+```
+
+The script writes to `bin/TwentyFourHour.iq` (or `.prg`). It fetches the key into a temp file that's deleted on exit, so the raw key never lingers on disk.
+
+### Manual build (without the script)
 
 ```bash
 SDK_DIR="$HOME/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-8.1.1-2025-03-27-66dae750f"
-DEV_KEY="/path/to/your/developer_key"
+KEY=$(mktemp) && trap 'rm -f "$KEY"' EXIT
+op read "op://Private/garmin-developer-key/password" | base64 -d > "$KEY"
 
-# Debug build (single device, for simulator)
-"$SDK_DIR/bin/monkeyc" -o bin/TwentyFourHour.prg -f monkey.jungle -y "$DEV_KEY" -d fr955
+# Release .iq
+"$SDK_DIR/bin/monkeyc" -o bin/TwentyFourHour.iq -f monkey.jungle -y "$KEY" -e -r
 
-# Release build (.iq package for all devices)
-"$SDK_DIR/bin/monkeyc" -o bin/TwentyFourHour.iq -f monkey.jungle -y "$DEV_KEY" -e -r
+# Or debug .prg for the simulator
+"$SDK_DIR/bin/monkeyc" -o bin/TwentyFourHour.prg -f monkey.jungle -y "$KEY" -d fr955
 ```
 
 ## Run in Simulator
