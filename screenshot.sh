@@ -21,7 +21,7 @@
 
 set -euo pipefail
 
-KEY_REF="${KEY_REF:-op://Private/garmin-developer-key/password}"
+KEY_REF="${KEY_REF:-op://Private/Garmin developer key/developer_key}"
 SDK_DIR="${SDK_DIR:-$HOME/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-8.1.1-2025-03-27-66dae750f}"
 DEVICE="fr955"
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -83,9 +83,10 @@ echo "🔨 Building watch face..."
 cd "$PROJECT_DIR"
 
 # Fetch signing key from 1Password into a temp file, removed on exit.
+# `--out-file` is binary-safe (plain `op read` would UTF-8-mangle the DER).
 DEV_KEY=$(mktemp)
 trap 'rm -f "$DEV_KEY"' EXIT
-op read "$KEY_REF" | base64 -d > "$DEV_KEY"
+op read --out-file "$DEV_KEY" --force "$KEY_REF" > /dev/null
 
 "$SDK_DIR/bin/monkeyc" -o bin/TwentyFourHour.prg -f monkey.jungle -y "$DEV_KEY" -d "$DEVICE"
 echo "   Build successful"

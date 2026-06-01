@@ -117,15 +117,13 @@ The Connect IQ store enforces that every version of an app be signed with the **
 
 ### One-time: stash the developer key in 1Password
 
-Create a Password item whose `password` field holds the base64-encoded key:
+The build scripts read the key as a file attachment on a Secure Note. Default reference: `op://Private/Garmin developer key/developer_key`. To set this up, create a Secure Note titled `Garmin developer key` in your Private vault (via the 1Password app or web) and attach the `developer_key` file to it as-is — no encoding needed.
+
+Override the reference with the `KEY_REF` env var if your item lives elsewhere:
 
 ```bash
-op item create --category=password \
-  --title='garmin-developer-key' --vault=Private \
-  "password[concealed]=$(base64 -i /path/to/developer_key)"
+KEY_REF='op://Work/garmin-key/developer_key' ./build.sh
 ```
-
-The default reference both build scripts read is `op://Private/garmin-developer-key/password`. Override with the `KEY_REF` env var if you put it elsewhere.
 
 ### Building
 
@@ -141,7 +139,7 @@ The script writes to `bin/TwentyFourHour.iq` (or `.prg`). It fetches the key int
 ```bash
 SDK_DIR="$HOME/Library/Application Support/Garmin/ConnectIQ/Sdks/connectiq-sdk-mac-8.1.1-2025-03-27-66dae750f"
 KEY=$(mktemp) && trap 'rm -f "$KEY"' EXIT
-op read "op://Private/garmin-developer-key/password" | base64 -d > "$KEY"
+op read --out-file "$KEY" --force "op://Private/Garmin developer key/developer_key" > /dev/null
 
 # Release .iq
 "$SDK_DIR/bin/monkeyc" -o bin/TwentyFourHour.iq -f monkey.jungle -y "$KEY" -e -r
@@ -149,6 +147,8 @@ op read "op://Private/garmin-developer-key/password" | base64 -d > "$KEY"
 # Or debug .prg for the simulator
 "$SDK_DIR/bin/monkeyc" -o bin/TwentyFourHour.prg -f monkey.jungle -y "$KEY" -d fr955
 ```
+
+> **Note:** `--out-file` is required — plain `op read` writes to stdout via a UTF-8 text path and mangles non-ASCII bytes in the binary DER key (each invalid byte becomes the U+FFFD replacement character, corrupting the key).
 
 ## Run in Simulator
 
