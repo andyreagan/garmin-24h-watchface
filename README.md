@@ -81,7 +81,7 @@ Full description:
 > • Show/hide date
 > • Show/hide battery %
 
-Per-version release notes (v2.2.0):
+Per-version release notes (v2.2.1):
 
 > • New hour number style: Radial — every label's bottom faces the dial center, giving a sunburst look (lower-half numbers render upside down)
 
