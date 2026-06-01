@@ -25,7 +25,7 @@ Inspired by the [Spokes Worldtime](https://apps.garmin.cn/zh-CN/apps/ada4fbf3-9a
 ## Features
 
 - **24-hour dial**: 24 at top (midnight), 6 at right, 12 at bottom, 18 at left (clockwise)
-- **Hour number labels** — choose Rotated (top half upright, bottom half flipped so it reads from below), Upright (all labels horizontal), or Off (no labels, ticks only)
+- **Hour number labels** — choose Rotated (top half upright, bottom half flipped so it reads from below), Upright (all labels horizontal), Radial (every label's bottom points at the dial center, so lower-half numbers render upside down), or Off (no labels, ticks only)
 - **Hour and quarter-hour tick marks**
 - **Hour hand** with arrowhead for precise time reading
 - **Noon-at-top option** — flip the dial so 12 sits at the top instead of 24
@@ -35,7 +35,11 @@ Inspired by the [Spokes Worldtime](https://apps.garmin.cn/zh-CN/apps/ada4fbf3-9a
 - **Optional minute hand** (toggle in settings)
 - **Optional date display** (toggle in settings)
 
-### What's new in v3
+### What's new in v2.2
+
+- Hour number style: **Radial** — every label's bottom points at the dial center; lower-half numbers render upside down for a sunburst look
+
+### What's new in v2.1
 
 - Hour number style: Rotated / Upright / Off
 - Optional 60-dot minute mark ring for 1-minute reading precision
@@ -59,7 +63,7 @@ Full description:
 > Features:
 >
 > • 24-hour dial — choose 24 at top (midnight) or 12 at top (noon)
-> • Hour number style — Rotated (top half upright, bottom half flipped), Upright (all horizontal), or Off (ticks only)
+> • Hour number style — Rotated (top half upright, bottom half flipped), Upright (all horizontal), Radial (bottoms face center, lower-half upside-down), or Off (ticks only)
 > • Hour and quarter-hour tick marks, with optional 5-minute tick highlights in Yellow, Red, Green, Blue, or Orange — the minute hand picks up the same color
 > • Optional 60-dot minute mark ring for 1-minute reading precision
 > • Hour hand with arrowhead for precise time reading
@@ -70,14 +74,18 @@ Full description:
 > Settings (via Garmin Connect Mobile):
 >
 > • Noon at top (12 at top instead of 24)
-> • Hour number style (Rotated / Upright / Off)
+> • Hour number style (Rotated / Upright / Radial / Off)
 > • 5-minute tick highlight color
 > • Show/hide minute marks (60-dot ring)
 > • Show/hide minute hand
 > • Show/hide date
 > • Show/hide battery %
 
-Per-version release notes (v3.0.0):
+Per-version release notes (v2.2.0):
+
+> • New hour number style: Radial — every label's bottom faces the dial center, giving a sunburst look (lower-half numbers render upside down)
+
+Per-version release notes (v2.1.0):
 
 > • Hour number style: Rotated / Upright / Off
 > • Optional 60-dot minute mark ring for 1-minute reading precision
@@ -193,9 +201,10 @@ python3 generate_numbers.py    # Requires: pip3 install Pillow
 ```
 
 - Font: Helvetica Bold, 13pt
-- Rotated set, top half (18→6): radially oriented, readable from outside
+- Rotated set, top half (18→6): tangent to the rim, readable from outside
 - Rotated set, bottom half (7→17): flipped 180°, readable from below
 - Upright set: no rotation, shared between standard and noon-at-top orientations
+- Radial set: same tangential angles as Rotated but **without** the bottom-half flip, so every glyph's bottom faces the dial center; renders standard and noon-at-top variants
 
 ## Project Structure
 
@@ -204,12 +213,13 @@ python3 generate_numbers.py    # Requires: pip3 install Pillow
 │   ├── TwentyFourHourApp.mc        # App entry point
 │   └── TwentyFourHourView.mc       # Watch face drawing logic
 ├── resources/
-│   ├── drawables/numbers/           # 24 standard + 24 noon-at-top + 24 upright bitmaps
+│   ├── drawables/numbers/           # 24 standard + 24 noon + 24 upright + 24 radial + 24 radial-noon bitmaps
 │   ├── settings/                    # ShowMinuteHand, ShowDate, ShowBattery, NoonAtTop, FiveMinTickColor, TickLabelStyle, ShowMinuteMarks
 │   └── strings/                     # App name, setting titles
 ├── generate_numbers.py              # Regenerate rotated number bitmaps
 ├── generate_screen_images.py        # Generate store screen images
 ├── generate_store_images.py         # Generate store banner & cover
+├── build.sh                         # Release/debug build (fetches signing key from 1Password)
 ├── screenshot.sh                    # Build + simulator screenshot capture
 └── manifest.xml                     # Supported devices & permissions
 ```
