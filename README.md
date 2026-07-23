@@ -35,6 +35,11 @@ Inspired by the [Spokes Worldtime](https://apps.garmin.cn/zh-CN/apps/ada4fbf3-9a
 - **Optional minute hand** (toggle in settings)
 - **Optional date display** (toggle in settings)
 
+### What's new in v2.3
+
+- Hour numbers Off: tick marks now extend to the dial edge
+- Enduro 3 support
+
 ### What's new in v2.2
 
 - Hour number style: **Radial** — every label's bottom points at the dial center; lower-half numbers render upside down for a sunburst look
@@ -81,6 +86,11 @@ Full description:
 > • Show/hide date
 > • Show/hide battery %
 
+Per-version release notes (v2.3.0):
+
+> • Hour numbers Off: tick marks now extend to the dial edge
+> • Added Enduro 3 support
+
 Per-version release notes (v2.2.1):
 
 > • New hour number style: Radial — every label's bottom faces the dial center, giving a sunburst look (lower-half numbers render upside down)
@@ -98,7 +108,7 @@ Per-version release notes (v2.0.0):
 
 ## Supported Devices
 
-Forerunner 255/265/945/955/965, fēnix 7/7S/7X/7 Pro/7S Pro/7X Pro, fēnix 8 (AMOLED & Solar), epix (Gen 2) / epix Pro, Venu 2/2S/2 Plus/3/3S, vívoactive 5, and more.
+Forerunner 255/265/945/955/965, fēnix 7/7S/7X/7 Pro/7S Pro/7X Pro, fēnix 8 (AMOLED & Solar), Enduro 3, epix (Gen 2) / epix Pro, Venu 2/2S/2 Plus/3/3S, vívoactive 5, and more.
 
 ## Install
 

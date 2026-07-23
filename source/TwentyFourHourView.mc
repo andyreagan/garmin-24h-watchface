@@ -242,9 +242,12 @@ class TwentyFourHourView extends WatchUi.WatchFace {
         // pull them in slightly to avoid clipping at the dial edge.
         var labelStyle = readNumber("TickLabelStyle", 0);
         var numberRadius = (labelStyle == 1) ? _radius - 11 : _radius - 8;
-        var tickOuter = _radius - 18;
-        var hourTickInner = _radius - 32;
-        var quarterTickInner = _radius - 25;
+        // With numbers off, the ring they'd occupy is dead space — slide the
+        // ticks out to the dial edge (a small margin avoids round-bezel clipping).
+        var tickShift = (labelStyle == 2) ? 15 : 0;
+        var tickOuter = _radius - 18 + tickShift;
+        var hourTickInner = _radius - 32 + tickShift;
+        var quarterTickInner = _radius - 25 + tickShift;
 
         if (labelStyle != 2) {
             var bitmaps = (labelStyle == 1)
